@@ -1,0 +1,741 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40" xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+    <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office" />
+    <Styles>
+        <Style ss:ID="Default">
+            <Font ss:FontName="Tahoma" ss:Color="#000000" />
+            <Alignment ss:Vertical="Bottom" />
+        </Style>
+    </Styles>
+    <Worksheet ss:Name="Données OJ">
+        <Table ss:FullColumns="1" ss:FullRows="1">
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">Nom</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Prenom</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Première dernière</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">DateDeNaissance</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Sexe</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Poids</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Hauteur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Pied</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Sport</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Discipline</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Niveau</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Rôle</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">ID</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Ecole</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Dossard</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Max Fréquence Cardiaque</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Fréquence Cardiaque au repos</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Anaérobic FC Max</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Anaérobic FC Min</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Hauteur Gyko</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Test</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Date</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Heure</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">#</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">G/D</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps externe</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de réaction</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps d'attente</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de vol</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de contact</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de pas</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Elevation</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Puissance</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Rythme[p/s]</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Rythme[pas/m]</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Pas</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Vitesse</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Accél.</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">intermédiaire</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Alpha</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Déséquilibre</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Distance</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Foulée</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Stride Time\Cycle</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Simple appuis</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Simple appuis%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Total double appuis</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Total double appuis%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de Contact</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de Contact%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de Balancier</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de Balancier%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase de Contact</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase de Contact%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase à plat</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase à plat%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase de Propulsion</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase de Propulsion%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Mise en charge</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Mise en charge%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase pré-oscillante</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Phase pré-oscillante%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Point d'équilibreX</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Décalage latéralX</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Largeur de pas</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Base de marche</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">PCI</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">HRM</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Point d'équilibreY</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Décalage latéralY</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">BodySwayAP</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">BodySwayML</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Norm. Pas</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Vitesse tapis</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Pente du Tapis</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de vol%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Temps de contact%</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">RSI</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Duty factor</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Notes</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Accueil à l'extérieur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">DÉPART</Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="29">
+                    <Data ss:Type="Number">0.613</Data>
+                </Cell>
+                <Cell ss:Index="32">
+                    <Data ss:Type="Number">46.1</Data>
+                </Cell>
+                <Cell ss:Index="65">
+                    <Data ss:Type="Number">29.2</Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">2</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="29">
+                    <Data ss:Type="Number">0.609</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">11.102</Data>
+                </Cell>
+                <Cell ss:Index="32">
+                    <Data ss:Type="Number">45.5</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">15.44</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">0.09</Data>
+                </Cell>
+                <Cell ss:Index="49">
+                    <Data ss:Type="Number">11.102</Data>
+                </Cell>
+                <Cell ss:Index="63">
+                    <Data ss:Type="Number">-0.5</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">-0.5</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">34.4</Data>
+                </Cell>
+                <Cell ss:Index="78">
+                    <Data ss:Type="Number">0.04</Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">3</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="29">
+                    <Data ss:Type="Number">0.036</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">1.486</Data>
+                </Cell>
+                <Cell ss:Index="32">
+                    <Data ss:Type="Number">0.2</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">0.89</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">0.66</Data>
+                </Cell>
+                <Cell ss:Index="49">
+                    <Data ss:Type="Number">1.486</Data>
+                </Cell>
+                <Cell ss:Index="63">
+                    <Data ss:Type="Number">-13.6</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">-13.1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">27.1</Data>
+                </Cell>
+                <Cell ss:Index="78">
+                    <Data ss:Type="Number">0</Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">4</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="30">
+                    <Data ss:Type="Number">0.657</Data>
+                </Cell>
+                <Cell ss:Index="49">
+                    <Data ss:Type="Number">0.657</Data>
+                </Cell>
+                <Cell ss:Index="63">
+                    <Data ss:Type="Number">-20.9</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">-7.3</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="Number">22.9</Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">utilisateur</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"> </Data>
+                </Cell>
+                <Cell ss:Index="8">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="21">
+                    <Data ss:Type="String">CMJ LIBRE SALON V1</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">11/03/2024</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">10:38:58</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Accueil à l'extérieur STOP</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String"></Data>
+                </Cell>
+                <Cell ss:Index="80">
+                    <Data ss:Type="String"></Data>
+                </Cell>
+            </Row>
+        </Table>
+        <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+            <PageSetup>
+                <Layout Orientation="Landscape" />
+                <Header Margin="0.3" />
+                <Footer Margin="0.3" />
+                <PageMargins Bottom="0.4" Left="0.5" Right="0.5" Top="0.4" />
+            </PageSetup>
+            <Print>
+                <ValidPrinterInfo />
+                <FitHeight>1</FitHeight>
+                <FitWidth>1</FitWidth>
+                <Scale>100</Scale>
+            </Print>
+            <Selected />
+            <FreezePanes />
+            <FrozenNoSplit />
+            <SplitHorizontal>1</SplitHorizontal>
+            <TopRowBottomPane>1</TopRowBottomPane>
+            <ActivePane>2</ActivePane>
+            <Panes>
+                <Pane>
+                    <Number>3</Number>
+                </Pane>
+                <Pane>
+                    <Number>2</Number>
+                </Pane>
+            </Panes>
+        </WorksheetOptions>
+    </Worksheet>
+    <Worksheet ss:Name="Protocol de données">
+        <Table ss:FullColumns="1" ss:FullRows="1" />
+        <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+            <PageSetup>
+                <Layout Orientation="Landscape" />
+                <Header Margin="0.3" />
+                <Footer Margin="0.3" />
+                <PageMargins Bottom="0.4" Left="0.5" Right="0.5" Top="0.4" />
+            </PageSetup>
+            <Print>
+                <ValidPrinterInfo />
+                <FitHeight>1</FitHeight>
+                <FitWidth>1</FitWidth>
+                <Scale>100</Scale>
+            </Print>
+            <Selected />
+        </WorksheetOptions>
+    </Worksheet>
+    <Worksheet ss:Name="Résumé">
+        <Table ss:FullColumns="1" ss:FullRows="1" />
+        <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+            <PageSetup>
+                <Layout Orientation="Landscape" />
+                <Header Margin="0.3" />
+                <Footer Margin="0.3" />
+                <PageMargins Bottom="0.4" Left="0.5" Right="0.5" Top="0.4" />
+            </PageSetup>
+            <Print>
+                <ValidPrinterInfo />
+                <FitHeight>1</FitHeight>
+                <FitWidth>1</FitWidth>
+                <Scale>100</Scale>
+            </Print>
+            <Selected />
+        </WorksheetOptions>
+    </Worksheet>
+</Workbook>

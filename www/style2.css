@@ -1,0 +1,28 @@
+.record_value{
+    font-size:2.2em;
+    color : #EDD89F;
+    animation : glow 1s ease-in-out infinite alternate;
+} 
+
+@keyframes glow{
+    from {
+        text-shadow: 
+        0 0 2px #FFFFFF,
+        0 0 4px #FFFFFF,
+        0 0 8px #A1CCCD,
+        0 0 16px #A1CCCD,
+        0 0 32px #F9E9CA,
+        0 0 64px #F9E9CA, 
+        0 0 128px #F9E9CA;   
+    }
+    to {
+        text-shadow: 
+        0 0 2px #FFFFFF,
+        0 0 4px #FFFFFF,
+        0 0 8px #A1CCCD,
+        0 0 16px #A1CCCD,
+        0 0 32px #F9E9CA,
+        0 0 64px #F9E9CA, 
+        0 0 128px #F9E9CA;
+    }
+}
