@@ -182,40 +182,37 @@ parse_xml_file <- function(xml_file, columns_to_extract) {
 
 
 # Fonction pour créer un swarm plot en fonction de la colonne spécifiée
-swarm_plot_colored <- function(dataframe, nom, colonne) {
-  # Regroupement des données par Nom et garder la valeur maximum de la colonne et le sexe
+swarm_plot_colored <- function(dataframe, nom) {
+  
+  colonne <- "Hauteur"
+  
+  # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
   dataframe <- dataframe %>%
     group_by(Nom, Sexe) %>%
-    summarise(across(all_of(colonne), max), .groups = 'drop')
+    summarise(across(all_of(colonne), max), .groups = 'drop') %>%
+    arrange(Nom)
   
-  # Création d'une nouvelle colonne pour les couleurs
-  dataframe$couleur <-
-    ifelse(dataframe$Sexe == "Homme", "Homme", 
-           ifelse(dataframe$Sexe == "Femme", "Femme", "Non binaire"))
+  
+  dataframe$Sexe <- str_trim(dataframe$Sexe)
+  
+  
+  dataframe <- dataframe %>%
+    mutate(couleur = case_when(
+      Sexe == "Homme" ~ "Homme",
+      Sexe == "Femme" ~ "Femme",
+      Sexe == "Non binaire" ~ "Non binaire",
+      TRUE ~ NA_character_  # Valeur par défaut si aucune condition n'est remplie
+    ))
+  
   dataframe$couleur[dataframe$Nom == nom] <- "Votre performance"
   
   # Arrondi des valeurs de hauteur à la première décimale
   dataframe[[colonne]] <- round(dataframe[[colonne]], 1)
   
-  # Filtrage des valeurs où le Sexe est égal à "Femme"
-  filtre_femme <- dataframe[dataframe$Sexe == "Femme",]
-  # Calcul de la moyenne de la colonne
-  moy_hauteur_femme <- round(mean(filtre_femme[[colonne]], na.rm = TRUE), 1)
-  
-  if (is.nan(moy_hauteur_femme)) {
-    moy_hauteur_femme = 0
-  }
-  print(moy_hauteur_femme)
-  
-  # Filtrage des valeurs où le Sexe est égal à "Homme"
-  filtre_homme <- dataframe[dataframe$Sexe == "Homme",]
-  # Calcul de la moyenne de la colonne
-  moy_hauteur_homme <- round(mean(filtre_homme[[colonne]], na.rm = TRUE), 1)
-  
-  # Filtrage des valeurs où le Sexe est égal à "Non binaire"
-  filtre_non_binaire <- dataframe[dataframe$Sexe == "Non binaire",]
-  # Calcul de la moyenne de la colonne
-  moy_hauteur_non_binaire <- round(mean(filtre_non_binaire[[colonne]], na.rm = TRUE), 1)
+  # Filtrage des valeurs et calcul des moyennes
+  moy_hauteur_femme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Femme"], na.rm = TRUE), 1)
+  moy_hauteur_homme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Homme"], na.rm = TRUE), 1)
+  moy_hauteur_non_binaire <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Non binaire"], na.rm = TRUE), 1)
   
   # Filtrage des données pour "Votre performance"
   votre_performance <- dataframe[dataframe$couleur == "Votre performance",]
@@ -292,13 +289,15 @@ swarm_plot_colored <- function(dataframe, nom, colonne) {
     
     scale_linetype_manual(values = c("Moyenne Femme" = "dashed", "Moyenne Homme" = "dashed", "Moyenne Non binaire" = "dashed")) +
     
-    geom_text_repel(data = dataframe,
-                    aes(
-                      x = Sexe,
-                      y = !!rlang::sym(colonne),
-                      label = round(!!rlang::sym(colonne), 1)
-                    ),
-                    vjust = -1.5) +
+    geom_text_repel(
+      data = dataframe,
+      aes(
+        x = Sexe,
+        y = !!rlang::sym(colonne),
+        label = round(!!rlang::sym(colonne), 1)
+      ),
+      vjust = -1.5
+    ) +
     
     labs(
       x = "Sexe",
@@ -350,6 +349,7 @@ swarm_plot_colored <- function(dataframe, nom, colonne) {
   # Affichage du graphique
   print(p)
 }
+
 
 
 swarm_plot_colored_visualisation <- function(dataframe, nom) {

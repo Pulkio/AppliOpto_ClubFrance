@@ -176,7 +176,8 @@ CMJ_Server <- function(input, output, session) {
             trois_visiteur(sorted_heights[3])
           }
           
-          p <- swarm_plot_colored(donnees, input$athlete_name, "Hauteur")
+          
+          p <- swarm_plot_colored(donnees, input$athlete_name)
           return(p)
         }
       } else {
