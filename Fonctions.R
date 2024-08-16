@@ -352,20 +352,45 @@ swarm_plot_colored <- function(dataframe, nom) {
 
 
 
-swarm_plot_colored_visualisation <- function(dataframe, nom) {
+
+
+
+
+
+# Fonction pour créer un swarm plot en fonction de la colonne spécifiée
+swarm_plot_colored_visualisation <- function(dataframe) {
   
-  colonne = "Hauteur"
-  # Regroupement des données par Nom et garder la valeur maximum de la colonne et la discipline
+  colonne <- "Hauteur"
+  # Extraire le nom de la dernière ligne
+  nom <- dataframe[nrow(dataframe), "Nom"]
+  
+  # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
   dataframe <- dataframe %>%
-    group_by(Nom, Discipline) %>%
-    summarise(across(all_of(colonne), max), .groups = 'drop')
+    group_by(Nom, Sexe) %>%
+    summarise(across(all_of(colonne), max), .groups = 'drop') %>%
+    arrange(Nom)
   
-  # Création d'une nouvelle colonne pour les couleurs
-  dataframe$couleur <- dataframe$Discipline
+  
+  dataframe$Sexe <- str_trim(dataframe$Sexe)
+  
+  
+  dataframe <- dataframe %>%
+    mutate(couleur = case_when(
+      Sexe == "Homme" ~ "Homme",
+      Sexe == "Femme" ~ "Femme",
+      Sexe == "Non binaire" ~ "Non binaire",
+      TRUE ~ NA_character_  # Valeur par défaut si aucune condition n'est remplie
+    ))
+  
   dataframe$couleur[dataframe$Nom == nom] <- "Votre performance"
   
   # Arrondi des valeurs de hauteur à la première décimale
   dataframe[[colonne]] <- round(dataframe[[colonne]], 1)
+  
+  # Filtrage des valeurs et calcul des moyennes
+  moy_hauteur_femme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Femme"], na.rm = TRUE), 1)
+  moy_hauteur_homme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Homme"], na.rm = TRUE), 1)
+  moy_hauteur_non_binaire <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Non binaire"], na.rm = TRUE), 1)
   
   # Filtrage des données pour "Votre performance"
   votre_performance <- dataframe[dataframe$couleur == "Votre performance",]
@@ -375,7 +400,7 @@ swarm_plot_colored_visualisation <- function(dataframe, nom) {
     geom_point(
       data = dataframe[dataframe$couleur != "Votre performance",],
       aes(
-        x = Discipline,
+        x = Sexe,
         y = !!rlang::sym(colonne),
         fill = couleur,
         text = paste(colonne, ": ", round(!!rlang::sym(colonne), 1))
@@ -389,7 +414,7 @@ swarm_plot_colored_visualisation <- function(dataframe, nom) {
     geom_point(
       data = votre_performance,
       aes(
-        x = Discipline,
+        x = Sexe,
         y = !!rlang::sym(colonne),
         fill = couleur,
         text = paste(colonne, ": ", round(!!rlang::sym(colonne), 1))
@@ -400,35 +425,60 @@ swarm_plot_colored_visualisation <- function(dataframe, nom) {
     ) +
     scale_fill_manual(
       values = c(
-        "Sprint" = "#1f78b4",
-        "Demi-Fond" = "#33a02c",
-        "Haies" = "#e31a1c",
-        "Sauts" = "#ff7f00",
-        "Lancers" = "#6a3d9a",
-        "Marche" = "#b15928",
+        "Homme" = "#2C2F65",
+        "Femme" = "#C5243D",
+        "Non binaire" = "green",
         "Votre performance" = "gold"
       ),
       labels = c(
-        "Sprint" = "Sprint",
-        "Demi-Fond" = "Demi-Fond",
-        "Haies" = "Haies",
-        "Sauts" = "Sauts",
-        "Lancers" = "Lancers",
-        "Marche" = "Marche",
+        "Homme" = "Hommes",
+        "Femme" = "Femmes",
+        "Non binaire" = "Non binaires",
         "Votre performance" = "Votre performance"
       )
     ) +
     
-    geom_text_repel(data = dataframe,
-                    aes(
-                      x = Discipline,
-                      y = !!rlang::sym(colonne),
-                      label = round(!!rlang::sym(colonne), 1)
-                    ),
-                    vjust = -1.5) +
+    geom_hline(
+      aes(
+        yintercept = moy_hauteur_femme,
+        linetype = "Moyenne Femme",
+        text = paste("Moyenne Femme: ", moy_hauteur_femme)
+      ),
+      color = "#C5243D"
+    ) +
+    
+    geom_hline(
+      aes(
+        yintercept = moy_hauteur_homme,
+        linetype = "Moyenne Homme",
+        text = paste("Moyenne Homme: ", moy_hauteur_homme)
+      ),
+      color = "#2C2F65"
+    ) +
+    
+    geom_hline(
+      aes(
+        yintercept = moy_hauteur_non_binaire,
+        linetype = "Moyenne Non binaire",
+        text = paste("Moyenne Non binaire: ", moy_hauteur_non_binaire)
+      ),
+      color = "green"
+    ) +
+    
+    scale_linetype_manual(values = c("Moyenne Femme" = "dashed", "Moyenne Homme" = "dashed", "Moyenne Non binaire" = "dashed")) +
+    
+    geom_text_repel(
+      data = dataframe,
+      aes(
+        x = Sexe,
+        y = !!rlang::sym(colonne),
+        label = round(!!rlang::sym(colonne), 1)
+      ),
+      vjust = -1.5
+    ) +
     
     labs(
-      x = "Discipline",
+      x = "Sexe",
       y = "Hauteur du saut",
       title = "Résultats sauts CMJ",
       caption = "Survolez la ligne pour voir la hauteur"
@@ -441,20 +491,20 @@ swarm_plot_colored_visualisation <- function(dataframe, nom) {
   
   # Modifier les étiquettes de la légende manuellement
   for (i in seq_along(p$x$data)) {
-    if (p$x$data[[i]]$name == "(Sprint,1)") {
-      p$x$data[[i]]$name <- "Sprint"
-    } else if (p$x$data[[i]]$name == "(Demi-Fond,1)") {
-      p$x$data[[i]]$name <- "Demi-Fond"
-    } else if (p$x$data[[i]]$name == "(Haies,1)") {
-      p$x$data[[i]]$name <- "Haies"
-    } else if (p$x$data[[i]]$name == "(Sauts,1)") {
-      p$x$data[[i]]$name <- "Sauts"
-    } else if (p$x$data[[i]]$name == "(Lancers,1)") {
-      p$x$data[[i]]$name <- "Lancers"
-    } else if (p$x$data[[i]]$name == "(Marche,1)") {
-      p$x$data[[i]]$name <- "Marche"
+    if (p$x$data[[i]]$name == "(Homme,1)") {
+      p$x$data[[i]]$name <- "Score Hommes"
+    } else if (p$x$data[[i]]$name == "(Femme,1)") {
+      p$x$data[[i]]$name <- "Score Femmes"
+    } else if (p$x$data[[i]]$name == "(Non binaire,1)") {
+      p$x$data[[i]]$name <- "Score Non binaires"
     } else if (p$x$data[[i]]$name == "(Votre performance,1)") {
       p$x$data[[i]]$name <- "Votre performance"
+    } else if (p$x$data[[i]]$name == "(Moyenne Femme,1)") {
+      p$x$data[[i]]$name <- "Moyenne Femme"
+    } else if (p$x$data[[i]]$name == "(Moyenne Homme,1)") {
+      p$x$data[[i]]$name <- "Moyenne Homme"
+    } else if (p$x$data[[i]]$name == "(Moyenne Non binaire,1)") {
+      p$x$data[[i]]$name <- "Moyenne Non binaire"
     }
   }
   
@@ -477,4 +527,6 @@ swarm_plot_colored_visualisation <- function(dataframe, nom) {
   # Affichage du graphique
   print(p)
 }
+
+
 

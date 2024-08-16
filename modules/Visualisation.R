@@ -3,53 +3,30 @@ library(shiny)
 library(dplyr)
 library(plotly)
 
-# Chargement des bibliothèques nécessaires
-library(shiny)
-library(dplyr)
-library(plotly)
 
 # Définition de l'interface utilisateur (UI) avec la fonction Visualisation_UI()
 Visualisation_UI <- function(id) {
-  # Création d'un espace de noms pour cette fonction UI avec la fonction NS()
   ns <- NS(id)
   
-  # Utilisation de tagList() pour lister les éléments de l'interface utilisateur
   tagList(
-    # Ajout d'une balise CSS externe pour le style
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     
-    # Création d'une ligne fluide (fluidRow) avec deux colonnes (column)
     fluidRow(
-      # Première colonne : largeur 6, alignement centré, titre de niveau 4 et saut de ligne
       column(width = 6, align = "center",
              br(),
              h4("TEST CMJ"),
-             # Deuxième colonne :
-             # - Champ pour uploader un fichier CSV (fileInput)
-             # - Saut de ligne (br())
-             # - Sélecteur multiple pour les catégories (selectInput)
-             # - Bouton d'action pour soumettre les informations (actionButton)
-             fileInput(ns("csv_file"), "Uploader un fichier CSV"),
+             fileInput(ns("txt_file"), "Uploader un fichier txt"),
              br(),
-             selectInput(ns("categorie_select"), "Sélectionner les catégories", choices = c("EcoleAthle", "Poussin", "Benjamins", "Minimes", "Cadets", "Juniors", "Espoirs", "Seniors", "Masters"), multiple = TRUE),
+             selectInput(ns("categorie_select"), "Sélectionner les catégories", choices = c("EcoleAthle(2015+)", "Poussin(2013)", "Benjamins(2011)", "Minimes(2009)", "Cadets(2007)", "Juniors(2005)", "Espoirs(2002)", "Seniors(1990)", "Masters(1989-)"), multiple = TRUE),
+             br(),
+             selectInput(ns("Niveau_sportif"), "Niveau sportif", choices = c("Occasionnel(1-2h)", "Régulier(3-5h)", "Intensif(6-12h)", "Compétitif(11-15h)", "Élite(+15h)"), multiple = TRUE),
              br(),
              actionButton(ns("submit_button"), label = "Soumettre")
       ),
-      # Deuxième colonne : largeur 6, alignement centré, espace réservé pour afficher les résultats du test (htmlOutput)
       column(width = 6, align = "center",
              br(),
-             htmlOutput(ns("results_text")),
-             textOutput(ns("record_text")),
-             verbatimTextOutput(ns("average_performance_text")),  # Utilisation de verbatimTextOutput pour afficher le texte brut
-             verbatimTextOutput(ns("average_performance_group_text"))
+             plotlyOutput(ns("swarm_plot_colored"))  # Ajout du graphique ici
       )
-    ),
-    # Ajout de tabsetPanel pour créer les onglets
-    tabsetPanel(
-      id = ns("tabs"),
-      tabPanel("Homme", plotlyOutput(ns("bar_chart_homme"), width = "100%", height = "600px")),
-      tabPanel("Femme", plotlyOutput(ns("bar_chart_femme"), width = "100%", height = "600px")),
-      tabPanel("Non binaire", plotlyOutput(ns("bar_chart_nb"), width = "100%", height = "600px"))
     )
   )
 }
@@ -57,168 +34,208 @@ Visualisation_UI <- function(id) {
 
 
 
-# Server module
+
 Visualisation_Server <- function(input, output, session) {
   ns <- session$ns
-  isDataProcessed <- reactiveVal(NULL)
-  record_visiteur <- reactiveVal(NULL)
-  deux_visiteur <- reactiveVal(NULL)
-  trois_visiteur <- reactiveVal(NULL)
+  
+  # Réactive pour stocker les données filtrées après clic sur le bouton
+  filtered_data <- reactiveVal(NULL)
   
   observeEvent(input$submit_button, {
-    req(input$csv_file, input$categorie_select)
+    req(input$txt_file, input$categorie_select, input$Niveau_sportif)
     
-    # Lire les données du fichier CSV
-    csv_file_path <- input$csv_file$datapath
-    data <- read.csv(csv_file_path, stringsAsFactors = FALSE)
+    # Lire les données du fichier texte
+    donnees <- read.table(input$txt_file$datapath, sep = ",", header = FALSE, stringsAsFactors = FALSE,
+                          col.names = c("Nom", "Hauteur", "Sexe", "Sport", "Niveau", "Categorie"))
     
-    # Filtrer les données en fonction des catégories sélectionnées
-    data <- data %>% filter(Categorie %in% input$categorie_select)
     
-    # Récupérer le "Nom" de la dernière ligne
-    dernier_nom <- data[nrow(data), "Nom"]
+    donnees$Nom <- trimws(donnees$Nom)
+    donnees$Hauteur <- trimws(donnees$Hauteur)
+    donnees$Sexe <- trimws(donnees$Sexe)
+    donnees$Sport <- trimws(donnees$Sport)
+    donnees$Niveau <- trimws(donnees$Niveau)
+    donnees$Categorie <- trimws(donnees$Categorie)
     
-    # Sélectionner la ligne avec la hauteur maximale pour chaque Nom
-    result <- data %>%
-      group_by(Nom) %>%
-      slice(which.max(Hauteur))
+    # # Nettoyer les données en supprimant les espaces
+    # donnees$Sexe <- trimws(donnees$Sexe)
     
-    # Afficher le résultat
-    print(result)
+    # Filtrer les données en fonction des sélections
+    donnees_filtrees <- donnees %>%
+      filter(Categorie %in% input$categorie_select, Niveau == input$Niveau_sportif)
     
-    # Mettre à jour les graphiques pour chaque onglet
-    output$bar_chart_homme <- renderPlotly({
-      # Filtrer les données pour les hommes
-      data_homme <- result %>% filter(Sexe == "Homme")
-      swarm_plot_colored_visualisation(data_homme, dernier_nom)
-    })
+    print(donnees_filtrees, 20)
     
-    output$bar_chart_femme <- renderPlotly({
-      # Filtrer les données pour les femmes
-      data_femme <- result %>% filter(Sexe == "Femme")
-      swarm_plot_colored_visualisation(data_femme, dernier_nom)
-    })
+    # Mettre à jour les données filtrées
+    filtered_data(donnees_filtrees)
+  })
+  
+  
+  
+  output$swarm_plot_colored <- renderPlotly({
     
-    output$bar_chart_nb <- renderPlotly({
-      # Filtrer les données pour les personnes non-binaires
-      data_nb <- result %>% filter(Sexe == "Non binaire")
-      swarm_plot_colored_visualisation(data_nb, dernier_nom)
-    })
+    req(filtered_data())  # S'assure que filtered_data() est disponible
     
-    observeEvent(input$tabs, {
-      req(input$csv_file)
-      # Lire les données du fichier CSV
-      csv_file_path <- input$csv_file$datapath
-      data <- read.csv(csv_file_path, stringsAsFactors = FALSE)
+    dataframe <- filtered_data()
+    
+    colonne <- "Hauteur"
+    
+    # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
+    dataframe <- dataframe %>%
+      group_by(Nom, Sexe) %>%
+      summarise(across(all_of(colonne), max), .groups = 'drop') %>%
+      arrange(Nom)
+    
+    
+    
+    
+    dataframe <- dataframe %>%
+      mutate(couleur = case_when(
+        Sexe == "Homme" ~ "Homme",
+        Sexe == "Femme" ~ "Femme",
+        Sexe == "Non binaire" ~ "Non binaire",
+        TRUE ~ NA_character_  # Valeur par défaut si aucune condition n'est remplie
+      ))
+    
+    # Vérifier et convertir la colonne spécifiée en numérique si nécessaire
+    if (!is.numeric(dataframe[[colonne]])) {
+      dataframe[[colonne]] <- as.numeric(dataframe[[colonne]])
+    }
+    
+    # Arrondi des valeurs de hauteur à la première décimale
+    dataframe[[colonne]] <- round(dataframe[[colonne]], 1)
+    
+    # Filtrage des valeurs et calcul des moyennes
+    moy_hauteur_femme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Femme"], na.rm = TRUE), 1)
+    moy_hauteur_homme <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Homme"], na.rm = TRUE), 1)
+    moy_hauteur_non_binaire <- round(mean(dataframe$Hauteur[dataframe$Sexe == "Non binaire"], na.rm = TRUE), 1)
+    
+    # Création du swarm plot avec ggplot
+    p <- ggplot() +
+      geom_point(
+        data = dataframe,
+        aes(
+          x = Sexe,
+          y = !!rlang::sym(colonne),
+          fill = couleur,
+          text = paste(colonne, ": ", round(!!rlang::sym(colonne), 1))
+        ),
+        alpha = 0.8,
+        size = 3,
+        shape = 21,
+        color = "black",
+        position = position_jitter(height = 0)
+      ) +
+      scale_fill_manual(
+        values = c(
+          "Homme" = "#2C2F65",
+          "Femme" = "#C5243D",
+          "Non binaire" = "green"
+        ),
+        labels = c(
+          "Homme" = "Hommes",
+          "Femme" = "Femmes",
+          "Non binaire" = "Non binaires"
+        )
+      ) +
       
-      # Filtrer les données en fonction des catégories sélectionnées
-      data <- data %>% filter(Categorie %in% input$categorie_select)
+      geom_hline(
+        aes(
+          yintercept = moy_hauteur_femme,
+          linetype = "Moyenne Femme",
+          text = paste("Moyenne Femme: ", moy_hauteur_femme)
+        ),
+        color = "#C5243D"
+      ) +
       
-      # Sélectionner la ligne avec la hauteur maximale pour chaque Nom
-      result <- data
+      geom_hline(
+        aes(
+          yintercept = moy_hauteur_homme,
+          linetype = "Moyenne Homme",
+          text = paste("Moyenne Homme: ", moy_hauteur_homme)
+        ),
+        color = "#2C2F65"
+      ) +
       
-      selected_sexe <- switch(input$tabs,
-                              "Homme" = "Homme",
-                              "Femme" = "Femme",
-                              "Non binaire" = "Non binaire")
+      geom_hline(
+        aes(
+          yintercept = moy_hauteur_non_binaire,
+          linetype = "Moyenne Non binaire",
+          text = paste("Moyenne Non binaire: ", moy_hauteur_non_binaire)
+        ),
+        color = "green"
+      ) +
       
-      record <- result %>% filter(Sexe == selected_sexe) %>% summarise(Record = max(Hauteur, na.rm = TRUE))
+      scale_linetype_manual(values = c("Moyenne Femme" = "dashed", "Moyenne Homme" = "dashed", "Moyenne Non binaire" = "dashed")) +
       
-      output$record_text <- renderText({
-        paste("Record pour", selected_sexe, ":", record$Record, "cm")
-      })
-    })
+      geom_text_repel(
+        data = dataframe,
+        aes(
+          x = Sexe,
+          y = !!rlang::sym(colonne),
+          label = round(!!rlang::sym(colonne), 1)
+        ),
+        vjust = -1.5
+      ) +
+      
+      labs(
+        x = "Sexe",
+        y = "Hauteur du saut",
+        title = "Résultats sauts CMJ",
+        caption = "Survolez la ligne pour voir la hauteur"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "bottom")
     
+    # Convertir le graphique ggplot en plotly pour l'interactivité
+    p <- ggplotly(p, tooltip = c("text"))
     
-    # Calculer et afficher le classement de la moyenne des performances par groupe de disciplines
-    # Calculer et afficher le classement de la moyenne des performances par groupe de disciplines
-    output$average_performance_text <- renderText({
-      if (!is.null(input$csv_file) && !is.null(input$categorie_select)) {
-        csv_file_path <- input$csv_file$datapath
-        data <- read.csv(csv_file_path, stringsAsFactors = FALSE)
-        
-        # Filtrer les données en fonction des catégories sélectionnées
-        data <- data %>% filter(Categorie %in% input$categorie_select)
-        
-        selected_sexe <- switch(input$tabs,
-                                "Homme" = "Homme",
-                                "Femme" = "Femme",
-                                "Non binaire" = "Non binaire")
-        
-        # Filtrer les données par sexe sélectionné
-        data <- data %>% filter(Sexe == selected_sexe)
-        
-        # Sélectionner la meilleure performance pour chaque athlète
-        best_performances <- data %>%
-          group_by(Nom, Categorie) %>%
-          summarise(Best_Hauteur = max(Hauteur, na.rm = TRUE), .groups = 'drop')
-        
-        # Calculer la moyenne des meilleures performances par catégorie
-        avg_performances <- best_performances %>%
-          group_by(Categorie) %>%
-          summarise(Average = mean(Best_Hauteur, na.rm = TRUE), .groups = 'drop')
-        
-        # Trier par ordre décroissant de moyenne
-        avg_performances <- avg_performances[order(-avg_performances$Average), ]
-        
-        # Concaténer chaque paire catégorie et moyenne de performance dans une variable
-        avg_performance_text <- paste(avg_performances$Categorie, ": ", round(avg_performances$Average, 2), " cm")
-        
-        # Retourner le texte concaténé
-        avg_performance_text <- paste(avg_performance_text, collapse = "\n")
-        
-        return(avg_performance_text)
+    # Modifier les étiquettes de la légende manuellement
+    for (i in seq_along(p$x$data)) {
+      if (p$x$data[[i]]$name == "(Homme,1)") {
+        p$x$data[[i]]$name <- "Score Hommes"
+      } else if (p$x$data[[i]]$name == "(Femme,1)") {
+        p$x$data[[i]]$name <- "Score Femmes"
+      } else if (p$x$data[[i]]$name == "(Non binaire,1)") {
+        p$x$data[[i]]$name <- "Score Non binaires"
+      } else if (p$x$data[[i]]$name == "(Moyenne Femme,1)") {
+        p$x$data[[i]]$name <- "Moyenne Femme"
+      } else if (p$x$data[[i]]$name == "(Moyenne Homme,1)") {
+        p$x$data[[i]]$name <- "Moyenne Homme"
+      } else if (p$x$data[[i]]$name == "(Moyenne Non binaire,1)") {
+        p$x$data[[i]]$name <- "Moyenne Non binaire"
       }
-    })
+    }
+    
+    # Appliquer la mise en page pour modifier le titre de la légende et centrer le titre du plot
+    p <- p %>%
+      layout(
+        legend = list(
+          title = list(text = "Légende",
+                       font = list(size = 14)),
+          y = 0.5,
+          yanchor = "middle"
+        ),
+        title = list(
+          text = "Résultats sauts CMJ",
+          x = 0.5,
+          xanchor = "center"
+        )
+      )
+    
+    # Affichage du graphique
+    print(p)
     
     
     
     
     
-    # Calculer et afficher le classement de la moyenne des performances par groupe de disciplines
-    output$average_performance_group_text <- renderText({
-      if (!is.null(input$csv_file) && !is.null(input$categorie_select)) {
-        csv_file_path <- input$csv_file$datapath
-        data <- read.csv(csv_file_path, stringsAsFactors = FALSE)
-        
-        # Filtrer les données en fonction des catégories sélectionnées
-        data <- data %>% filter(Categorie %in% input$categorie_select)
-        
-        selected_sexe <- switch(input$tabs,
-                                "Homme" = "Homme",
-                                "Femme" = "Femme",
-                                "Non binaire" = "Non binaire")
-        
-        # Filtrer les données par sexe sélectionné
-        data <- data %>% filter(Sexe == selected_sexe)
-        
-        # Sélectionner la meilleure performance pour chaque athlète
-        best_performances <- data %>%
-          group_by(Nom, Discipline) %>%
-          summarise(Best_Hauteur = max(Hauteur, na.rm = TRUE), .groups = 'drop')
-        
-        # Calculer la moyenne des meilleures performances par catégorie
-        avg_performances <- best_performances %>%
-          group_by(Discipline) %>%
-          summarise(Average = mean(Best_Hauteur, na.rm = TRUE), .groups = 'drop')
-        
-        # Trier par ordre décroissant de moyenne
-        avg_performances <- avg_performances[order(-avg_performances$Average), ]
-        
-        # Concaténer chaque paire catégorie et moyenne de performance dans une variable
-        average_performance_group_text <- paste(avg_performances$Discipline, ": ", round(avg_performances$Average, 2), " cm")
-        
-        # Retourner le texte concaténé
-        average_performance_group_text <- paste(average_performance_group_text, collapse = "\n")
-        
-        return(average_performance_group_text)
-      }
-    })
     
     
     
   })
 }
+
+
 
 
 
