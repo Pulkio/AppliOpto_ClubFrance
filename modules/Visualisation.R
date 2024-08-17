@@ -25,7 +25,18 @@ Visualisation_UI <- function(id) {
       ),
       column(width = 6, align = "center",
              br(),
-             plotlyOutput(ns("swarm_plot_colored"))  # Ajout du graphique ici
+             h4("Records"),
+             div(style = "font-size: 24px;",
+                 textOutput(ns("record_homme")),
+                 textOutput(ns("record_femme")),
+                 textOutput(ns("record_non_binaire"))
+             )
+      )
+    ),
+    
+    fluidRow(
+      column(width = 12,
+             plotlyOutput(ns("swarm_plot_colored"))
       )
     )
   )
@@ -61,12 +72,38 @@ Visualisation_Server <- function(input, output, session) {
     
     # Filtrer les données en fonction des sélections
     donnees_filtrees <- donnees %>%
-      filter(Categorie %in% input$categorie_select, Niveau == input$Niveau_sportif)
-    
-    print(donnees_filtrees, 20)
+      filter(Categorie %in% input$categorie_select, Niveau %in% input$Niveau_sportif)
     
     # Mettre à jour les données filtrées
     filtered_data(donnees_filtrees)
+  })
+  
+  
+  output$record_homme <- renderText({
+    req(filtered_data())  # S'assure que filtered_data() est disponible
+    dataframe <- filtered_data()
+    
+    # Extraire la hauteur maximale pour les hommes
+    record_homme <- max(dataframe$Hauteur[dataframe$Sexe == "Homme"], na.rm = TRUE)
+    paste("Record Homme ️:", record_homme)
+  })
+  
+  output$record_femme <- renderText({
+    req(filtered_data())  # S'assure que filtered_data() est disponible
+    dataframe <- filtered_data()
+    
+    # Extraire la hauteur maximale pour les femmes
+    record_femme <- max(dataframe$Hauteur[dataframe$Sexe == "Femme"], na.rm = TRUE)
+    paste("Record Femme :", record_femme)
+  })
+  
+  output$record_non_binaire <- renderText({
+    req(filtered_data())  # S'assure que filtered_data() est disponible
+    dataframe <- filtered_data()
+    
+    # Extraire la hauteur maximale pour les personnes non-binaires
+    record_non_binaire <- max(dataframe$Hauteur[dataframe$Sexe == "Non binaire"], na.rm = TRUE)
+    paste("Record Non Binaire :", record_non_binaire)
   })
   
   
@@ -80,13 +117,19 @@ Visualisation_Server <- function(input, output, session) {
     colonne <- "Hauteur"
     
     # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
+    # dataframe <- dataframe %>%
+    #   group_by(Nom, Sexe) %>%
+    #   summarise(across(all_of(colonne), max), .groups = 'drop') %>%
+    #   arrange(Nom)
+    
+    
+    # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
     dataframe <- dataframe %>%
       group_by(Nom, Sexe) %>%
-      summarise(across(all_of(colonne), max), .groups = 'drop') %>%
+      slice_max(order_by = !!rlang::sym(colonne), n = 1) %>%
+      ungroup() %>%
       arrange(Nom)
-    
-    
-    
+  
     
     dataframe <- dataframe %>%
       mutate(couleur = case_when(
