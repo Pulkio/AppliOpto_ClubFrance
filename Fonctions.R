@@ -182,15 +182,15 @@ parse_xml_file <- function(xml_file, columns_to_extract) {
 
 
 # Fonction pour créer un swarm plot en fonction de la colonne spécifiée
-swarm_plot_colored <- function(dataframe, nom) {
+swarm_plot_colored <- function(dataframe, id) {
   
   colonne <- "Hauteur"
   
   # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
   dataframe <- dataframe %>%
-    group_by(Nom, Sexe) %>%
+    group_by(AthleteID, Sexe) %>%
     summarise(across(all_of(colonne), max), .groups = 'drop') %>%
-    arrange(Nom)
+    arrange(AthleteID)
   
   
   dataframe$Sexe <- str_trim(dataframe$Sexe)
@@ -204,7 +204,7 @@ swarm_plot_colored <- function(dataframe, nom) {
       TRUE ~ NA_character_  # Valeur par défaut si aucune condition n'est remplie
     ))
   
-  dataframe$couleur[dataframe$Nom == nom] <- "Votre performance"
+  dataframe$couleur[dataframe$AthleteID == id] <- "Votre performance"
   
   # Arrondi des valeurs de hauteur à la première décimale
   dataframe[[colonne]] <- round(dataframe[[colonne]], 1)

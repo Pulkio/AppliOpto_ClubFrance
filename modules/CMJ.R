@@ -2,48 +2,34 @@
 library(shiny)
 library(dplyr)
 library(plotly)
+library(uuid)
 
 # Définition de l'interface utilisateur (UI) avec la fonction CMJ_UI()
 CMJ_UI <- function(id) {
-  # Création d'un espace de noms pour cette fonction UI avec la fonction NS()
   ns <- NS(id)
   
-  # Utilisation de tagList() pour lister les éléments de l'interface utilisateur
   tagList(
-    # Ajout d'une balise CSS externe pour le style
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
     
-    # Création d'une ligne fluide (fluidRow) avec deux colonnes (column)
     fluidRow(
-      # Première colonne : largeur 6, alignement centré, titre de niveau 4 et saut de ligne
       column(width = 6, align = "center",
              br(),
              h4("TEST CMJ"),
-             # Deuxième colonne :
-             # - Champ pour uploader un fichier XML (fileInput)
-             # - Saut de ligne (br())
-             # - Champ de saisie de texte pour le nom de l'athlète (textInput)
-             # - Liste déroulante pour sélectionner le genre (selectInput)
-             # - Bouton d'action pour soumettre les informations (actionButton)
              fileInput(ns("xml_file"), "Uploader un fichier XML"),
              br(),
-             textInput(ns("athlete_name"), label = "Nom de l'athlète"),
-             selectInput(ns("gender_select"), label = "Genre", choices = c("Homme", "Femme", "Non binaire")),
              textInput(ns("sport"), label = "Sport"), 
              selectInput(ns("Niveau_sportif"), label = "Niveau_sportif", choices = c("Occasionnel(1-2h)", "Régulier(3-5h)", "Intensif(6-12h)", "Compétitif(11-15h)", "Élite(+15h)")),
-             selectInput(ns("categorie_select"), label = "Catégorie", choices = c("EcoleAthle(2015+)", "Poussin(2013)", "Benjamins(2011)", "Minimes(2009)", "Cadets(2007)", "Juniors(2005)", "Espoirs(2002)", "Seniors(1990)", "Masters(1989-)")),
+             numericInput(ns("age"), label = "Âge", value = 20, min = 0, max = 120),
+             selectInput(ns("sexe"), label = "Sexe", choices = c("Homme", "Femme", "Non binaire")),
              actionButton(ns("submit_button"), label = "Soumettre")
       ),
-      # Deuxième colonne : largeur 6, alignement centré, espace réservé pour afficher les résultats du test (htmlOutput)
       column(width = 6, align = "center",
              br(),
              htmlOutput(ns("results_text")),
              textOutput(ns("record_text"))
       )
     ),
-    # Création d'une deuxième ligne fluide (fluidRow) avec une colonne (column)
     fluidRow(
-      # Colonne : largeur 12, alignement centré, espace réservé pour le graphique en barres (plotlyOutput)
       column(width = 12, align = "center",
              br(),
              plotlyOutput(ns("bar_chart"), width = "100%", height = "500px")
@@ -52,6 +38,49 @@ CMJ_UI <- function(id) {
   )
 }
 
+# Fonction pour déterminer la catégorie en fonction de l'année de naissance
+get_category_from_year <- function(year_of_birth) {
+  current_year <- 2024
+  age <- current_year - year_of_birth
+  
+  if (age >= 85) {
+    return("Master10")
+  } else if (age >= 80) {
+    return("Master9")
+  } else if (age >= 75) {
+    return("Master8")
+  } else if (age >= 70) {
+    return("Master7")
+  } else if (age >= 65) {
+    return("Master6")
+  } else if (age >= 60) {
+    return("Master5")
+  } else if (age >= 55) {
+    return("Master4")
+  } else if (age >= 50) {
+    return("Master3")
+  } else if (age >= 45) {
+    return("Master2")
+  } else if (age >= 40) {
+    return("Master1")
+  } else if (age >= 23) {
+    return("Seniors")
+  } else if (age >= 20) {
+    return("Espoirs")
+  } else if (age >= 18) {
+    return("Juniors")
+  } else if (age >= 16) {
+    return("Cadets")
+  } else if (age >= 14) {
+    return("Minimes")
+  } else if (age >= 12) {
+    return("Benjamins")
+  } else if (age >= 10) {
+    return("Poussin")
+  } else {
+    return("EcoleAthle")
+  }
+}
 
 # Server module
 CMJ_Server <- function(input, output, session) {
@@ -62,102 +91,77 @@ CMJ_Server <- function(input, output, session) {
   trois_visiteur <- reactiveVal(NULL)
   
   observeEvent(input$submit_button, {
-    req(input$xml_file, input$athlete_name, input$gender_select)
+    req(input$xml_file, input$age)
     
-    # Exemple d'utilisation
     xml_file <- input$xml_file$datapath
     columns_to_extract <- c("Elevation")
     
-    # Résultats en colonnes
     result <- parse_xml_file(xml_file, columns_to_extract)
     
     if (!is.null(result) && length(result) > 0) {
       result <- as.data.frame(t(result))
-      # Définir les noms de colonnes avec la première ligne
       names(result) <- unlist(result[1, ])
-      # Supprimer la première ligne car elle est maintenant utilisée comme noms de colonnes
       result <- result[-1, ]
       result <- as.numeric(result)
       
-      Nom <- input$athlete_name
-      Sexe <- input$gender_select
+      AthleteID <- UUIDgenerate()
       Sport <- input$sport
       Niveau <- input$Niveau_sportif
-      Categorie <- input$categorie_select
+      Sexe <- input$sexe
+      YearOfBirth <- 2024 - input$age
+      Categorie <- get_category_from_year(YearOfBirth)
       
-      # Trier les valeurs de result en ordre décroissant
       sorted_result <- sort(result, decreasing = TRUE)
-      
-      # Obtenir les 3 plus grandes valeurs si il y a 3 valeurs ou plus,
-      # les 2 plus grandes valeurs si il y a 2 valeurs,
-      # et la valeur maximale si il y a une seule valeur
       top_values <- head(sorted_result, min(length(sorted_result), 3))
       
-      # Créer un dataframe avec les données
-      nouvelle_ligne <- data.frame(Nom = rep(Nom, length(top_values)),
+      nouvelle_ligne <- data.frame(AthleteID = rep(AthleteID, length(top_values)),
                                    Hauteur = top_values,
-                                   Sexe = rep(Sexe, length(top_values)),
                                    Sport = rep(Sport, length(top_values)),
                                    Niveau = rep(Niveau, length(top_values)),
+                                   Sexe = rep(Sexe, length(top_values)),
+                                   YearOfBirth = rep(YearOfBirth, length(top_values)),
                                    Categorie = rep(Categorie, length(top_values)))
       
-      # Filtrer les lignes avec une hauteur inférieure à 150
+      
+      print(nouvelle_ligne)
+      
       nouvelle_ligne <- nouvelle_ligne %>% filter(Hauteur < 150)
     }
     
-    
-    # Vérification si le fichier TXT existe
     file_path <- "results_globaux_CMJ.txt"
     if (!file.exists(file_path)) {
-      # Si le fichier n'existe pas, créer une ligne de texte
       ligne_texte <- apply(nouvelle_ligne, 1, function(row) paste(row, collapse = ","))
       writeLines(ligne_texte, con = file_path)
     } else {
-      # Si le fichier existe, lire les données actuelles
       donnees_existantes <- readLines(file_path)
       
-      # Vérifier si le nom de l'athlète existe déjà
-      noms_existants <- sapply(donnees_existantes, function(line) strsplit(line, ",")[[1]][2])
-      if (Nom %in% noms_existants) {
-        # Trouver un nom unique en ajoutant un numéro
-        num_suffix <- 1
-        while (paste0(Nom, num_suffix) %in% noms_existants) {
-          num_suffix <- num_suffix + 1
-        }
-        Nom <- paste0(Nom, num_suffix)
+      athlete_ids <- sapply(donnees_existantes, function(line) strsplit(line, ",")[[1]][1])
+      while (AthleteID %in% athlete_ids) {
+        AthleteID <- UUIDgenerate()
       }
       
-      # Ajouter la nouvelle ligne avec le nom mis à jour
-      nouvelle_ligne$Nom <- Nom
-      # Créer une nouvelle ligne de texte
+      nouvelle_ligne$AthleteID <- AthleteID
       ligne_texte <- apply(nouvelle_ligne, 1, function(row) paste(row, collapse = ","))
       
-      # Ajouter la nouvelle ligne au fichier existant
       writeLines(c(donnees_existantes, ligne_texte), con = file_path)
       isDataProcessed(TRUE)
     }
   })
   
-  
-  
   output$bar_chart <- renderPlotly({
-    req(input$xml_file, input$athlete_name, input$gender_select, isDataProcessed())
+    req(input$xml_file, input$age, isDataProcessed())
     
     file_path <- "results_globaux_CMJ.txt"
     if (file.exists(file_path)) {
-      # Lire les données du fichier texte avec des colonnes spécifiées
       donnees <- read.table(file_path, sep = ",", header = FALSE, stringsAsFactors = FALSE,
-                            col.names = c("Nom", "Hauteur", "Sexe", "Sport", "Niveau", "Categorie"))
-      
-      print(donnees)  # Affiche les données pour le débogage
+                            col.names = c("AthleteID", "Hauteur", "Sport", "Niveau", "Sexe", "YearOfBirth", "Categorie"))
       
       if (!is.null(donnees) && nrow(donnees) > 0) {
-        # Filtrer les données pour l'athlète actuel
         n <- nrow(donnees)
-        last_name <- donnees[n, "Nom"]
+        last_id <- donnees[n, "AthleteID"]
         athlete_data <- NULL
         for (i in seq(n, 1, -1)) {
-          if (donnees[i, "Nom"] == last_name) {
+          if (donnees[i, "AthleteID"] == last_id) {
             athlete_data <- rbind(athlete_data, donnees[i, ])
           } else {
             break
@@ -176,8 +180,7 @@ CMJ_Server <- function(input, output, session) {
             trois_visiteur(sorted_heights[3])
           }
           
-          
-          p <- swarm_plot_colored(donnees, input$athlete_name)
+          p <- swarm_plot_colored(donnees, last_id)
           return(p)
         }
       } else {
@@ -187,7 +190,4 @@ CMJ_Server <- function(input, output, session) {
       print("Le fichier TXT n'existe pas.")
     }
   })
-  
-  
 }
-

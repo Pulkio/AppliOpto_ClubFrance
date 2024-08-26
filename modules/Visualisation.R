@@ -17,7 +17,7 @@ Visualisation_UI <- function(id) {
              h4("TEST CMJ"),
              fileInput(ns("txt_file"), "Uploader un fichier txt"),
              br(),
-             selectInput(ns("categorie_select"), "Sélectionner les catégories", choices = c("EcoleAthle(2015+)", "Poussin(2013)", "Benjamins(2011)", "Minimes(2009)", "Cadets(2007)", "Juniors(2005)", "Espoirs(2002)", "Seniors(1990)", "Masters(1989-)"), multiple = TRUE),
+             selectInput(ns("categorie_select"), "Sélectionner les catégories", choices = c("EcoleAthle", "Poussin", "Benjamins", "Minimes", "Cadets", "Juniors", "Espoirs", "Seniors", "Master1", "Master2", "Master3", "Master4", "Master5", "Master6", "Master7", "Master8", "Master9", "Master10"), multiple = TRUE),
              br(),
              selectInput(ns("Niveau_sportif"), "Niveau sportif", choices = c("Occasionnel(1-2h)", "Régulier(3-5h)", "Intensif(6-12h)", "Compétitif(11-15h)", "Élite(+15h)"), multiple = TRUE),
              br(),
@@ -57,10 +57,11 @@ Visualisation_Server <- function(input, output, session) {
     
     # Lire les données du fichier texte
     donnees <- read.table(input$txt_file$datapath, sep = ",", header = FALSE, stringsAsFactors = FALSE,
-                          col.names = c("Nom", "Hauteur", "Sexe", "Sport", "Niveau", "Categorie"))
+                          col.names = c("AthleteID", "Hauteur", "Sport", "Niveau", "Sexe", "YearOfBirth", "Categorie"))
+  
     
     
-    donnees$Nom <- trimws(donnees$Nom)
+    donnees$Nom <- trimws(donnees$AthleteID)
     donnees$Hauteur <- trimws(donnees$Hauteur)
     donnees$Sexe <- trimws(donnees$Sexe)
     donnees$Sport <- trimws(donnees$Sport)
@@ -115,12 +116,6 @@ Visualisation_Server <- function(input, output, session) {
     dataframe <- filtered_data()
     
     colonne <- "Hauteur"
-    
-    # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
-    # dataframe <- dataframe %>%
-    #   group_by(Nom, Sexe) %>%
-    #   summarise(across(all_of(colonne), max), .groups = 'drop') %>%
-    #   arrange(Nom)
     
     
     # Regroupement des données par Nom et Sexe, et garde la valeur maximale de la colonne spécifiée
