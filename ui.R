@@ -14,7 +14,7 @@ ui <- fluidPage(
   titlePanel(
     div(
       img(src = "insep.png", height = 130), # Spécifie uniquement la hauteur
-      "Optojump Tapping et CMJ", 
+      "Optojump CMJ", 
       windowTitle = "Optojump visualisation"
     )
   ),
